@@ -42,16 +42,34 @@ public interface IOrderService
 public class OrderService : IOrderService
 {
     private readonly IEmailService emailService;
+    private readonly IEventService eventService;
 
-    public OrderService(IEmailService emailService)
+    public OrderService(IEmailService emailService, IEventService eventService)
     {
         this.emailService = emailService;
+        this.eventService = eventService;
     }
 
     public void PlaceOrder(Order order)
     {
         // Place order
         emailService.SendEmail(order.CustomerEmail!, "Order Placed", "Your order has been placed");
+
+        // Raise event
+        eventService.RaiseEvent("OrderPlaced");
+    }
+}
+
+public interface IEventService
+{
+    void RaiseEvent(string eventName);
+}
+
+public class EventService : IEventService
+{
+    public void RaiseEvent(string eventName)
+    {
+        System.Console.WriteLine($"Event {eventName} raised");
     }
 }
 
