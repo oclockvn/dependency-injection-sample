@@ -8,6 +8,7 @@ public static class Program
         IServiceCollection services = new ServiceCollection();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IOrderService, OrderService>();
+        services.AddTransient<IEventService, EventService>();
         IServiceProvider serviceProvider = services.BuildServiceProvider();
 
         var order = new Order
