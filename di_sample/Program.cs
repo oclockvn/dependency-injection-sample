@@ -1,8 +1,15 @@
-﻿namespace di_sample;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace di_sample;
 public static class Program
 {
     public static void Main(string[] args)
     {
+        IServiceCollection services = new ServiceCollection();
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IOrderService, OrderService>();
+        IServiceProvider serviceProvider = services.BuildServiceProvider();
+
         var order = new Order
         {
             OrderId = Guid.NewGuid(),
@@ -12,8 +19,7 @@ public static class Program
             CustomerEmail = "john@example.com"
         };
 
-        IEmailService emailService = new EmailService();
-        IOrderService orderService = new OrderService(emailService);
+        IOrderService orderService = serviceProvider.GetRequiredService<IOrderService>();
 
         orderService.PlaceOrder(order);
     }
